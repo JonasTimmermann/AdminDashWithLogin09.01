@@ -64,11 +64,13 @@ public class AnswersService {
 		}
 		
 		List<AnswerOfAnswers> aoaList = answer.getAoa();
-		for(int i = 0; i < aoaList.size(); i++) {
-			aoaList.get(i).setAnswers(answer);
-			aoaService.addAnswerOfAnswer(aoaList.get(i));		
+		if(aoaList != null) {
+			for(int i = 0; i < aoaList.size(); i++) {
+				aoaList.get(i).setAnswers(answer);
+				aoaService.addAnswerOfAnswer(aoaList.get(i));		
+			}
 		}
-		
+			
 		try {
 			answerRepo.save(answer);
 		}catch(Exception e) {
@@ -288,6 +290,12 @@ public class AnswersService {
 		}
 	}
 	
+	
+	//Method returns the answer by question id and ff id
+	public Answers findAnswerByQuestionIdAndFilledFormId(Integer question_id, Integer filledform_id) {
+		FormFilled ff = ffService.getFilledForm(filledform_id);
+		return answerRepo.findByQuestionId(question_id, ff);
+	}
 	
 	//Looks if the question flow is changed and returns the next questionid, 
 	//which needs to be displayed
