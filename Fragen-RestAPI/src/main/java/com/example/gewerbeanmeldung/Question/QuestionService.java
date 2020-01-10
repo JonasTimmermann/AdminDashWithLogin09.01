@@ -47,13 +47,18 @@ public class QuestionService {
 
 	// Saves a Question
 	public String saveQuestion(Question question) {
-		try {			
+		try {
+			for(int i = 0; i < question.getQuestionCategories().size(); i++) {
+				if(questionCategoryService.existsByCategoryName(question.getQuestionCategories().get(i).getCategory())) {
+					question.getQuestionCategories().set(i, questionCategoryService.getByCategoryName(question.getQuestionCategories().get(i).getCategory())); 
+				}
+			}
 			//Save question
 			questionRepo.save(question);
 			//Add the formtype to form entity, if not existing
 			formService.addWhenNotExisting(question.getFormType());
 				
-		}catch(Exception e) {
+		}catch(Exception e) { 
 			if(question.getQuestion() == null) {
 				return "Your Question needs to have a Question Name";
 			}
